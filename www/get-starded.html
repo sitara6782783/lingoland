@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Language Selection</title>
+    <style>
+        body {
+            background-color: #000;
+            color: #03e9f4;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            text-shadow: 0 0 5px #03e9f4, 0 0 20px #03e9f4, 0 0 40px #03e9f4;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .language-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .language-card {
+            background-color: #111;
+            border: 2px solid #03e9f4;
+            border-radius: 10px;
+            width: 150px;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .language-card:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 10px #03e9f4, 0 0 20px #03e9f4, 0 0 40px #03e9f4;
+        }
+
+        .language-flag {
+            width: 100%;
+            height: auto;
+            border-radius: 5px;
+        }
+
+        .language-card h3 {
+            margin-top: 10px;
+            font-size: 1.2em;
+        }
+
+        .site-language {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            font-size: 1.1em;
+            color: #03e9f4;
+        }
+
+        .site-language select {
+            background-color: #111;
+            color: #03e9f4;
+            border: 1px solid #03e9f4;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .language-card:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 15px #03e9f4, 0 0 30px #03e9f4, 0 0 60px #03e9f4;
+}
+
+
+        .site-language select:hover {
+            box-shadow: 0 0 10px #03e9f4;
+        }
+    </style>
+</head>
+<body>
+    <div class="site-language">
+        Idioma do site:
+        <select id="siteLanguage" onchange="changeSiteLanguage()">
+            <option value="en">English</option>
+            <option value="pt" selected>Português</option>
+            <option value="hi">हिन्दी</option>
+            <option value="ur">اردو</option>
+            <option value="de">Deutsch</option>
+            <option value="fr">Français</option>
+        </select>
+    </div>
+
+    <h1 id="headerText">Eu Quero Aprender</h1>
+    <div id="languageContainer" class="language-container">
+        <div class="language-card" data-lang="en">
+            <img src="img/eng.jpeg" alt="English Flag" class="language-flag">
+            <h3>English</h3>
+        </div>
+        <div class="language-card" data-lang="pt">
+            <img src="img/pt.jpeg" alt="Portuguese Flag" class="language-flag">
+            <h3>Português</h3>
+        </div>
+        <div class="language-card" data-lang="hi">
+            <img src="img/ind.webp" alt="Hindi Flag" class="language-flag">
+            <h3>हिन्दी</h3>
+        </div>
+        <div class="language-card" data-lang="ur">
+            <img src="img/pk.jpeg" alt="Urdu Flag" class="language-flag">
+            <h3>اردو</h3>
+        </div>
+        <div class="language-card" data-lang="de">
+            <img src="img/dt.png" alt="German Flag" class="language-flag">
+            <h3>Deutsch</h3>
+        </div>
+        <div class="language-card" data-lang="fr">
+            <img src="img/FR.webp" alt="French Flag" class="language-flag">
+            <h3>Français</h3>
+        </div>
+    </div>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js"></script>
+
+
+    <script>
+        const translations = {
+            en: {
+                header: "I Want to Learn",
+                languages: {
+                    en: "English",
+                    pt: "Portuguese",
+                    hi: "Hindi",
+                    ur: "Urdu",
+                    de: "German",
+                    fr: "French"
+                }
+            },
+            pt: {
+                header: "Eu Quero Aprender",
+                languages: {
+                    en: "Inglês",
+                    pt: "Português",
+                    hi: "Hindi",
+                    ur: "Urdu",
+                    de: "Alemão",
+                    fr: "Francês"
+                }
+            },
+            hi: {
+                header: "मैं सीखना चाहता हूँ",
+                languages: {
+                    en: "अंग्रेज़ी",
+                    pt: "पुर्तगाली",
+                    hi: "हिन्दी",
+                    ur: "उर्दू",
+                    de: "जर्मन",
+                    fr: "फ़्रांसीसी"
+                }
+            },
+            ur: {
+                header: "میں سیکھنا چاہتا ہوں",
+                languages: {
+                    en: "انگریزی",
+                    pt: "پرتگالی",
+                    hi: "हिन्दी",
+                    ur: "اردو",
+                    de: "جرمن",
+                    fr: "فرانسیسی"
+                }
+            },
+            de: {
+                header: "Ich Möchte Lernen",
+                languages: {
+                    en: "Englisch",
+                    pt: "Portugiesisch",
+                    hi: "Hindi",
+                    ur: "Urdu",
+                    de: "Deutsch",
+                    fr: "Französisch"
+                }
+            },
+            fr: {
+                header: "Je Veux Apprendre",
+                languages: {
+                    en: "Anglais",
+                    pt: "Portugais",
+                    hi: "Hindi",
+                    ur: "Ourdou",
+                    de: "Allemand",
+                    fr: "Français"
+                }
+            }
+        };
+
+        function changeSiteLanguage() {
+            const selectedLanguage = document.getElementById('siteLanguage').value;
+            const cards = document.querySelectorAll('.language-card');
+            
+            cards.forEach(card => {
+                if (card.dataset.lang === selectedLanguage) {
+                    card.style.display = 'none';
+                } else {
+                    card.style.display = 'flex';
+                }
+            });
+
+            // Change header text based on selected language
+            document.getElementById('headerText').textContent = translations[selectedLanguage].header;
+
+            // Change language names in the cards
+            document.querySelectorAll('.language-card').forEach(card => {
+                const lang = card.dataset.lang;
+                card.querySelector('h3').textContent = translations[selectedLanguage].languages[lang];
+            });
+        }
+
+        // Automatically hide the default site language on load
+        document.addEventListener('DOMContentLoaded', () => {
+            changeSiteLanguage();
+        });
+    </script>
+</body>
+</html>
